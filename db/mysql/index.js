@@ -10,7 +10,7 @@ const pool = mysql.createPool(mysqlConfig);
 module.exports.query = (sql, payload) => {
   return new Promise((resolve, reject) => {
     // 开发环境中打印sql语句
-    if (process.env.NODE_ENV === "dev") {
+    if (process.env.NODE_ENV === "development") {
       console.log("[sql]", mysql.format(sql, payload));
     }
     // 获取连接池中的连接
