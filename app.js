@@ -7,8 +7,12 @@ const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const jwt = require("koa-jwt");
 const jsonwebtoken = require("jsonwebtoken");
+const cors = require("koa2-cors");
 // 配置 process.env
 require("dotenv").config();
+
+// 使用 cors 处理跨域
+app.use(cors());
 
 // 导入路由
 const index = require("./routes/index");
@@ -61,7 +65,7 @@ app.use(
   })
 );
 
-// logger
+// 日志记录
 app.use(async (ctx, next) => {
   const start = new Date();
   await next();
@@ -69,11 +73,11 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
-// routes
+// 挂载路由
 app.use(index.routes()).use(index.allowedMethods());
 app.use(users.routes()).use(users.allowedMethods());
 
-// error-handling
+// 错误处理
 app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);
 });
