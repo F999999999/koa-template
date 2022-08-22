@@ -1,19 +1,13 @@
-const router = require('koa-router')()
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 2!'
-  })
-})
+const router = require("koa-router")();
 
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
-})
+const { index } = require("../controller/index");
 
-router.get('/json', async (ctx, next) => {
-  ctx.body = {
-    title: 'koa2 json'
-  }
-})
+// 前缀
+router.prefix("/");
 
-module.exports = router
+// 首页
+router.get("/", index);
+
+
+module.exports = router;
