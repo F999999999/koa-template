@@ -15,8 +15,8 @@ require("dotenv").config();
 app.use(cors());
 
 // 导入路由
-const index = require("./routes/index");
-const users = require("./routes/users");
+const index = require("./src/routes/index");
+const users = require("./src/routes/users");
 
 // 错误处理
 onerror(app);
