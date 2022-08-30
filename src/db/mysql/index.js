@@ -39,7 +39,10 @@ module.exports.rollbackTransaction = async (conn) => {
   if (process.env.NODE_ENV === "development") {
     console.log("[sql]", "==========>  回滚事务");
   }
-  return conn && (await conn.rollback());
+  // 回滚事务
+  await conn.rollback();
+  // 释放连接
+  conn.release();
 };
 
 // 使用事务执行SQL语句
