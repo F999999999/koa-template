@@ -6,10 +6,9 @@ const onerror = require("koa-onerror");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const jwt = require("koa-jwt");
-const jsonwebtoken = require("jsonwebtoken");
 const cors = require("koa2-cors");
 const { loadRouters } = require("./src/routes");
-const { decodeToken, refreshToken } = require("./src/utils/jwt");
+const { refreshToken } = require("./src/utils/jwt");
 // 配置 process.env
 require("dotenv").config();
 
@@ -18,24 +17,6 @@ app.use(cors());
 
 // 错误处理
 onerror(app);
-
-// 中间件
-app.use(
-  bodyparser({
-    enableTypes: ["json", "form", "text"],
-  })
-);
-app.use(json());
-app.use(logger());
-app.use(require("koa-static")(__dirname + "/public"));
-app.use(
-  views(__dirname + "/views", {
-    extension: "pug",
-  })
-);
-
-// 初始化自动加载路由
-loadRouters(app);
 
 // 中间件
 // 使用 koa-jwt 中间件 未拦截客户端在调用接口时 如果请求头中没有设置 token 则返回 401
@@ -59,14 +40,10 @@ app.use(
   })
 );
 
-// 处理token
+// 刷新 token 有效期
 app.use(async (ctx, next) => {
-  const token = ctx.request.headers?.authorization?.slice(7);
-  if (token) {
-    // 解析 token 数据
-    ctx.request.$tokenDocode = await decodeToken(token);
-  }
   await next();
+  const token = ctx.request.headers?.authorization?.slice(7);
   if (token) {
     // 刷新 token 有效期
     const newToken = await refreshToken(token);
@@ -78,6 +55,23 @@ app.use(async (ctx, next) => {
     }
   }
 });
+
+app.use(
+  bodyparser({
+    enableTypes: ["json", "form", "text"],
+  })
+);
+app.use(json());
+app.use(logger());
+app.use(require("koa-static")(__dirname + "/public"));
+app.use(
+  views(__dirname + "/views", {
+    extension: "pug",
+  })
+);
+
+// 初始化自动加载路由
+loadRouters(app);
 
 // 日志记录
 app.use(async (ctx, next) => {

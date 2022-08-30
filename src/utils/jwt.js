@@ -1,15 +1,6 @@
 // 引入 jwt
 const jwt = require("jsonwebtoken");
 
-// 解码token数据
-module.exports.decodeToken = async (token) => {
-  try {
-    return await jwt.verify(token, process.env.JWT_SECRET_KEY);
-  } catch (err) {
-    throw err;
-  }
-};
-
 // 刷新token有效期
 module.exports.refreshToken = async (
   token,
