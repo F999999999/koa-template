@@ -1,11 +1,14 @@
-const router = require("koa-router")();
+const requireDirectory = require("require-directory");
+const Router = require("koa-router");
 
-const { index } = require("../controller");
-
-// 前缀
-router.prefix("/");
-
-// 首页
-router.get("/", index);
-
-module.exports = router;
+// 自动加载路由
+module.exports.loadRouters = (app) => {
+  const whenLoadModule = (obj) => {
+    if (obj instanceof Router) {
+      app.use(obj.routes()).use(obj.allowedMethods());
+    }
+  };
+  requireDirectory(module, {
+    visit: whenLoadModule,
+  });
+};

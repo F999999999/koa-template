@@ -95,3 +95,15 @@ module.exports.login = async (ctx, next) => {
     };
   }
 };
+
+// 信息
+module.exports.Info = (ctx, next) => {
+  ctx.body = {
+    status: 200,
+    message: "获取成功",
+    data: {
+      name: "九玖",
+      age: 18,
+    },
+  };
+};
