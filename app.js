@@ -9,6 +9,7 @@ const jwt = require("koa-jwt");
 const jsonwebtoken = require("jsonwebtoken");
 const cors = require("koa2-cors");
 const { loadRouters } = require("./src/routes");
+const { decodeToken, refreshToken } = require("./src/utils/jwt");
 // 配置 process.env
 require("dotenv").config();
 
@@ -58,12 +59,24 @@ app.use(
   })
 );
 
-// 解析 token 数据
-app.use((ctx, next) => {
-  ctx.request.docodeToken = jsonwebtoken.decode(
-    ctx.request.headers?.authorization?.slice(7)
-  );
-  return next();
+// 处理token
+app.use(async (ctx, next) => {
+  const token = ctx.request.headers?.authorization?.slice(7);
+  if (token) {
+    // 解析 token 数据
+    ctx.request.$tokenDocode = await decodeToken(token);
+  }
+  await next();
+  if (token) {
+    // 刷新 token 有效期
+    const newToken = await refreshToken(token);
+    if (newToken !== token) {
+      // 配置允许访问的自定义头信息
+      ctx.set("Access-Control-Expose-Headers", "token");
+      // 保存 token 到 headers
+      ctx.set("token", newToken);
+    }
+  }
 });
 
 // 日志记录
