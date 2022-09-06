@@ -10,7 +10,10 @@ module.exports.refreshToken = async (
     // 校验并解密 token
     const decode = await jwt.verify(token, process.env.JWT_SECRET_KEY);
     // token 有效期小于有效期的1/2时重新生成新的 token
-    if (decode.exp - new Date().getTime() / 1000 < validityTime / 2) {
+    if (
+      decode.exp - new Date().getTime() / 1000 <
+      (decode.exp - decode.iat) / 2
+    ) {
       // 删除 jwt 标准注册的声明
       delete decode.iss; // jwt签发者
       delete decode.sub; // jwt所面向的用户

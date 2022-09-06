@@ -44,14 +44,21 @@ app.use(
 app.use(async (ctx, next) => {
   await next();
   const token = ctx.request.headers?.authorization?.slice(7);
+  // 判断是否有 token
   if (token) {
-    // 刷新 token 有效期
-    const newToken = await refreshToken(token);
-    if (!newToken.error && newToken !== token) {
-      // 配置允许访问的自定义头信息
-      ctx.set("Access-Control-Expose-Headers", "token");
-      // 保存 token 到 headers
-      ctx.set("token", newToken);
+    // 判断是否需要刷新 token
+    if (
+      ctx.state.user.exp - new Date().getTime() / 1000 <
+      (ctx.state.user.exp - ctx.state.user.iat) / 2
+    ) {
+      // 刷新 token 有效期
+      const newToken = await refreshToken(token);
+      if (!newToken.error && newToken !== token) {
+        // 配置允许访问的自定义头信息
+        ctx.set("Access-Control-Expose-Headers", "token");
+        // 保存 token 到 headers
+        ctx.set("token", newToken);
+      }
     }
   }
 });
