@@ -27,6 +27,9 @@ module.exports.refreshToken = async (
       return token;
     }
   } catch (err) {
-    throw err;
+    return {
+      error: { ...err },
+      data: jwt.decode(token),
+    };
   }
 };

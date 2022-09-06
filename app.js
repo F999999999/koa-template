@@ -47,7 +47,7 @@ app.use(async (ctx, next) => {
   if (token) {
     // 刷新 token 有效期
     const newToken = await refreshToken(token);
-    if (newToken !== token) {
+    if (!newToken.error && newToken !== token) {
       // 配置允许访问的自定义头信息
       ctx.set("Access-Control-Expose-Headers", "token");
       // 保存 token 到 headers
