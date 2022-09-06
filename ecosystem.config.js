@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       //pm2名字
-      name: "koa2_serve",
+      name: "koa_serve",
       //pm2运行脚本
       script: "bin/www",
       //环境变量

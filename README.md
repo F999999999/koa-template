@@ -1,6 +1,6 @@
-# koa2-template
-自用Koa2后端模板
-# .env文件模板
+# koa-template
+自用Koa后端模板
+# .env
 ```js
 PORT=3000
 

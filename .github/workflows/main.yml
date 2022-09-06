@@ -1,5 +1,5 @@
 # 工作流名称（默认值：配置文件名）
-name: GitHub Actions Deploy koa2-serve main
+name: GitHub Actions Deploy koa-serve main
 
 # 指定触发 工作流（workflow）的条件
 # 指定触发事件时，可以限定分支或标签
